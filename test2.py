@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 from datetime import timedelta
 from PIL import Image, ImageTk
 import io
-
+import time
 
 # Function to Filter Data Based on Timeframe
 def filter_timeframe(data, timeframe):
