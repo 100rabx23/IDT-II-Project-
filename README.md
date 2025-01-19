@@ -1,5 +1,5 @@
-****************
-# IDT-II-Project-
+***********************************
+# IDT-II-Project
 
 ## 🚀 Features  
 - **Data Upload**: Easily upload your stock data in CSV format.  
