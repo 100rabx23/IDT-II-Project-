@@ -12,7 +12,7 @@
   - Total Returns  
 - **Price Prediction**: Predict future stock prices for the next 30 days using Linear Regression.  
 - **Interactive Graphs**: Visualize stock trends, moving averages, and predictions using Plotly.  
-- **Report Generation**: Create detailed PDF reports summarizing stock performance and trends.  
+- **Report Generation**: Create detailed PDF reports summarizing stock performance and trends.(Not working right now)
 - **User-Friendly Interface**: A Tkinter-based GUI for easy interaction.  
 
 ---
