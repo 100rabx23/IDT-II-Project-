@@ -1,5 +1,4 @@
-import pandas as pd
-import numpy as np
+
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from sklearn.linear_model import LinearRegression
@@ -118,14 +117,7 @@ def display_metrics():
                   f"Sharpe Ratio: {sharpe_ratio:.4f}, Volatility: {volatility:.4f}, Avg Return: {avg_daily_return:.4f}")
         )
 
-def display_chart(fig):
-    """Render the chart on the GUI."""
-    img_bytes = fig.to_image(format="png", width=800, height=400)
-    img = Image.open(io.BytesIO(img_bytes))
-    img_tk = ImageTk.PhotoImage(img)
-    chart_canvas.delete("all")
-    chart_canvas.create_image(0, 0, anchor="nw", image=img_tk)
-    chart_canvas.image = img_tk
+
 
 # GUI Setup
 root = Tk()
