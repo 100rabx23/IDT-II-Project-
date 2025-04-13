@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Stock Market Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--accent), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            position: relative;
+            margin: 2rem 0;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        #search {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid #3d3d3d;
+            border-radius: 8px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        #search:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        #results {
+            position: absolute;
+            width: 100%;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .result-item {
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #3d3d3d;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item:hover {
+            background: #3d3d3d;
+            transform: translateX(5px);
+        }
+
+        .stock-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stock-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .recommendation {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .recommendation.buy {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .recommendation.sell {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .stock-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .info-item {
+            background: #3d3d3d;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .info-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            margin: 2rem 0;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            height: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .news-section {
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .news-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-title {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .news-date {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .news-source {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+        }
+
+        .error-container {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            animation: shake 0.5s ease-out;
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .retry-button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .retry-button:hover {
+            background: #dc2626;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--bg-secondary);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            animation: slideUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="animate__animated animate__fadeIn">Indian Stock Market Analysis</h1>
+            <p class="text-secondary animate__animated animate__fadeIn animate__delay-1s">Real-time market data and analysis</p>
+        </header>
+        
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search for stocks (e.g., TATA, RELIANCE, INFY)">
+            <div id="results"></div>
+        </div>
+
+        <div id="stockData" style="display: none;">
+            <div class="stock-card">
+                <div class="stock-header">
+                <h2 id="stockName"></h2>
+                    <div class="stock-price" id="stockPrice"></div>
+                </div>
+                <div id="recommendation" class="recommendation"></div>
+                
+                <div class="stock-info">
+                    <div class="info-item">
+                        <div class="info-label">Market Cap</div>
+                        <div class="info-value" id="marketCap"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">P/E Ratio</div>
+                        <div class="info-value" id="peRatio"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">52 Week High</div>
+                        <div class="info-value" id="weekHigh"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">52 Week Low</div>
+                        <div class="info-value" id="weekLow"></div>
+                </div>
+            </div>
+
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+            </div>
+
+                <div class="news-section">
+                    <h3>Latest News</h3>
+                    <div class="news-grid" id="newsGrid">
+                        <!-- News items will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            Loading stock data...
+        </div>
+
+        <div id="errorContainer" class="error-container" style="display: none;">
+            <div class="error-message" id="errorMessage"></div>
+            <button class="retry-button" onclick="retryLastAction()">Retry</button>
+        </div>
+    </div>
+
+    <script>
+        let priceChart = null;
+        let lastSymbol = null;
+
+        document.getElementById('search').addEventListener('input', async (e) => {
+            const query = e.target.value;
+            const results = document.getElementById('results');
+            
+            if (query.length > 0) {
+                try {
+                    const response = await fetch(`/search?q=${query}`);
+                    if (!response.ok) throw new Error('Search failed');
+                    const data = await response.json();
+                    
+                    if (data.length > 0) {
+                        results.style.display = 'block';
+                        results.innerHTML = data.map(stock => 
+                            `<div class="result-item animate__animated animate__fadeIn" onclick="selectStock('${stock.symbol}')">
+                    ${stock.name} (${stock.symbol})
+                            </div>`
+                        ).join('');
+                    } else {
+                        results.style.display = 'none';
+                    }
+                } catch (error) {
+                    showError('Failed to search stocks. Please try again.');
+                }
+            } else {
+                results.style.display = 'none';
+            }
+        });
+
+        async function selectStock(symbol) {
+            lastSymbol = symbol;
+            const stockData = document.getElementById('stockData');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const errorContainer = document.getElementById('errorContainer');
+            
+            results.style.display = 'none';
+            stockData.style.display = 'none';
+            errorContainer.style.display = 'none';
+            loading.style.display = 'block';
+
+            try {
+                const [stockResponse, newsResponse] = await Promise.all([
+                    fetch(`/stock/${symbol}`),
+                    fetch(`/news/${symbol}`)
+                ]);
+
+                if (!stockResponse.ok) throw new Error('Failed to fetch stock data');
+                const stockData = await stockResponse.json();
+                
+                if (stockData.error) throw new Error(stockData.error);
+
+                // Update stock information
+                document.getElementById('stockName').textContent = symbol;
+                document.getElementById('stockPrice').textContent = `₹${stockData.price}`;
+                
+                const recommendation = document.getElementById('recommendation');
+                recommendation.textContent = stockData.recommendation;
+                recommendation.className = `recommendation ${stockData.recommendation.toLowerCase()} animate__animated animate__fadeIn`;
+
+                // Update stock details
+                document.getElementById('marketCap').textContent = `₹${(stockData.info.marketCap / 1e12).toFixed(2)}T`;
+                document.getElementById('peRatio').textContent = stockData.info.peRatio.toFixed(2);
+                document.getElementById('weekHigh').textContent = `₹${stockData.info.weekHigh.toFixed(2)}`;
+                document.getElementById('weekLow').textContent = `₹${stockData.info.weekLow.toFixed(2)}`;
+
+                // Update chart
+                updateChart(stockData.hist);
+
+                // Update news
+                const newsGrid = document.getElementById('newsGrid');
+                if (newsResponse.ok) {
+                    const newsData = await newsResponse.json();
+                    newsGrid.innerHTML = newsData.map(news => `
+                        <div class="news-card animate__animated animate__fadeIn">
+                            <h4 class="news-title">${news.title}</h4>
+                            <div class="news-date">${new Date(news.date).toLocaleDateString()}</div>
+                            <div class="news-source">${news.source}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    newsGrid.innerHTML = '<div class="error">No news available</div>';
+                }
+
+                document.getElementById('stockData').style.display = 'block';
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorContainer.style.display = 'block';
+        }
+
+        function retryLastAction() {
+            if (lastSymbol) {
+                selectStock(lastSymbol);
+            }
+        }
+
+        function updateChart(histData) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            if (priceChart) {
+                priceChart.destroy();
+            }
+
+            const dates = histData.map(d => d.Date);
+            const prices = histData.map(d => d.Close);
+            const volumes = histData.map(d => d.Volume);
+
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Price',
+                            data: prices,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Volume',
+                            data: volumes,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Price (₹)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Volume'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
