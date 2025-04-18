@@ -127,10 +127,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+Your Name - saurabh singh - saurabhx2004@gmail.com
 
-Project Link: [https://github.com/yourusername/Indian-Stock-Analysis](https://github.com/yourusername/Indian-Stock-Analysis)
+Project Link: [https://github.com/100rabx23/Indian-Stock-Analysis](https://github.com/yourusername/Indian-Stock-Analysis)
 
 ---
 
-Made with ❤️ by [Your Name] 
+Made with ❤️ by 100RAB
