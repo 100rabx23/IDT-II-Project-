@@ -125,9 +125,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Chart.js](https://www.chartjs.org/) for interactive charts
 - [Animate.css](https://animate.style/) for animations
 
+## If you have any doubt contact me!
+
 ## 📞 Contact
-###If you have any doubt contact me!
-Your Name - saurabh singh - saurabhx2004@gmail.com
+
+Saurabh Singh - saurabhx2004@gmail.com
 
 Project Link: [https://github.com/100rabx23/Indian-Stock-Analysis](https://github.com/yourusername/Indian-Stock-Analysis)
 
