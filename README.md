@@ -126,7 +126,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Animate.css](https://animate.style/) for animations
 
 ## 📞 Contact
-
+###If you have any doubt contact me!
 Your Name - saurabh singh - saurabhx2004@gmail.com
 
 Project Link: [https://github.com/100rabx23/Indian-Stock-Analysis](https://github.com/yourusername/Indian-Stock-Analysis)
