@@ -1,6 +1,6 @@
 # 📈 Indian Stock Market Analysis Dashboard
 *****
-
+****
 A real-time stock market analysis dashboard that provides comprehensive insights into Indian stocks, including price trends, technical indicators, and market news.
 
 ![Dashboard Preview](img/dash.png)
